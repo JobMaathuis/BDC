@@ -1,5 +1,6 @@
 #! usr/bin/env python3
 
+import sys
 import argparse as ap
 import multiprocessing as mp
 import csv
@@ -44,8 +45,9 @@ def calculate_quals(quals):
 
 def generate_output(average_phredscores, csvfile, input_file):
     if csvfile is None:
-        for i, score in enumerate(average_phredscores):
-            print(f'{i},{score}')
+            csv_writer = csv.writer(sys.stdout, delimiter=',')
+            for i, score in enumerate(average_phredscores): 
+                csv_writer.writerow([i, score])
     
     else:
         if len(input_file) == 1:
