@@ -43,23 +43,17 @@ def calculate_quals(quals):
     return results
 
 
-def generate_output(average_phredscores, csvfile, input_file):
+def generate_output(average_phredscores, csvfile):
     if csvfile is None:
             csv_writer = csv.writer(sys.stdout, delimiter=',')
             for i, score in enumerate(average_phredscores): 
                 csv_writer.writerow([i, score])
     
     else:
-        if len(input_file) == 1:
-            with open(csvfile, 'w', encoding='UTF-8', newline='') as file:
-                csv_writer = csv.writer(file, delimiter=',')
-                for i, score in enumerate(average_phredscores): 
-                    csv_writer.writerow([i, score])
-        else:
-            with open(f'{input_file}.{csvfile}', 'w', encoding='UTF-8', newline='') as file:
-                csv_writer = csv.writer(file, delimiter=',')
-                for i, score in enumerate(average_phredscores): 
-                    csv_writer.writerow([i, score])
+        with open(csvfile, 'w', encoding='UTF-8', newline='') as file:
+            csv_writer = csv.writer(file, delimiter=',')
+            for i, score in enumerate(average_phredscores): 
+                csv_writer.writerow([i, score])
             
 
 if __name__ == '__main__':
@@ -75,7 +69,6 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     
     for file in args.fastq_files:
-        # print(file + args.csvfile)
         qualities = read_fastq(file)
         qual_chunked = chunks(qualities, 4)
         
@@ -83,5 +76,10 @@ if __name__ == '__main__':
             phredscores = pool.map(calculate_quals, qual_chunked)
     
         phredscores_avg = [sum(i) / len(qualities) for i in zip(*phredscores)]
-        generate_output(phredscores_avg, args.csvfile, file)
+        
+        if len(args.fastq_files) > 1:
+            csvfile = f'{file}.{args.csvfile}'
+        else:
+            csvfile = args.csvfile
+        generate_output(phredscores_avg, csvfile)
         
