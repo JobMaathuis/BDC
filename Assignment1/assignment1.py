@@ -35,8 +35,6 @@ def calculate_quals(quals):
     results = []
     for qual in quals:
         for j, c in enumerate(qual):
-                if j == 1:
-                    print(f'{ord(c) - 33}+', end='')
                 try:
                     results[j] += ord(c) - 33
                 except IndexError:
@@ -44,17 +42,23 @@ def calculate_quals(quals):
     return results
 
 
-def generate_output(average_phredscores, csvfile):
+def generate_output(average_phredscores, csvfile, input_file):
     if csvfile is None:
         for i, score in enumerate(average_phredscores):
             print(f'{i},{score}')
     
     else:
-        with open(csvfile, 'w', encoding='UTF-8', newline='') as file:
-            csv_writer = csv.writer(file, delimiter=',')
-            for i, score in enumerate(average_phredscores): 
-                csv_writer.writerow([i, score])
-
+        if len(input_file) == 1:
+            with open(csvfile, 'w', encoding='UTF-8', newline='') as file:
+                csv_writer = csv.writer(file, delimiter=',')
+                for i, score in enumerate(average_phredscores): 
+                    csv_writer.writerow([i, score])
+        else:
+            with open(f'{input_file}.{csvfile}', 'w', encoding='UTF-8', newline='') as file:
+                csv_writer = csv.writer(file, delimiter=',')
+                for i, score in enumerate(average_phredscores): 
+                    csv_writer.writerow([i, score])
+            
 
 if __name__ == '__main__':
     # argparse
@@ -69,6 +73,7 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     
     for file in args.fastq_files:
+        # print(file + args.csvfile)
         qualities = read_fastq(file)
         qual_chunked = chunks(qualities, 4)
         
@@ -76,5 +81,5 @@ if __name__ == '__main__':
             phredscores = pool.map(calculate_quals, qual_chunked)
     
         phredscores_avg = [sum(i) / len(qualities) for i in zip(*phredscores)]
-        generate_output(phredscores_avg, args.csvfile)
+        generate_output(phredscores_avg, args.csvfile, file)
         
