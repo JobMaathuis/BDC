@@ -78,8 +78,13 @@ if __name__ == '__main__':
         phredscores_avg = [sum(i) / len(qualities) for i in zip(*phredscores)]
         
         if len(args.fastq_files) > 1:
-            csvfile = f'{file}.{args.csvfile}'
+            if args.csvfile is None:
+                print(file)
+                csvfile = None
+            else:
+                csvfile = f'{file}.{args.csvfile}'
         else:
             csvfile = args.csvfile
+            
         generate_output(phredscores_avg, csvfile)
         
