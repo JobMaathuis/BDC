@@ -1,0 +1,10 @@
+ ************* Module assignment1
+ assignment1.py:10: warning (W0621, redefined-outer-name, chunks) Redefining name 'chunks' from outer scope (line 10)
+ assignment1.py:26: warning (W1514, unspecified-encoding, read_fastq) Using open without explicitly specifying an encoding
+ assignment1.py:49: warning (W0621, redefined-outer-name, generate_output) Redefining name 'csvfile' from outer scope (line 86)
+ assignment1.py:57: warning (W0621, redefined-outer-name, generate_output) Redefining name 'file' from outer scope (line 74)
+ 
+ -------------------------------------------------------------------
+ Your code has been rated at 9.34/10 (previous run: 10.00/10, -0.66)
+ 
+ 
