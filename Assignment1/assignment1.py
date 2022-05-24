@@ -77,9 +77,9 @@ if __name__ == '__main__':
 
         with mp.Pool(args.n) as pool:
             phredscores = pool.map(calculate_quals, qual_chunked)
-
+        print(len(qualities))
         phredscores_avg = [sum(i) / len(qualities) for i in zip(*phredscores)]
-
+        print(phredscores_avg)
         if len(args.fastq_files) > 1:
             if args.csvfile is None:
                 print(file)
