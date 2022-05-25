@@ -13,7 +13,7 @@ import subprocess
 
 POISONPILL = "MEMENTOMORI"
 ERROR = "DOH"
-IP = '127.0.0.1'
+IP = ''
 PORTNUM = 8899
 AUTHKEY = b'whathasitgotinitspocketsesss?'
 
@@ -135,7 +135,7 @@ def make_server_manager(ip, port, authkey):
         pass
     QueueManager.register('get_job_q', callable=lambda: job_q)
     QueueManager.register('get_result_q', callable=lambda: result_q)
-    manager = QueueManager(address=(ip, port), authkey=authkey)
+    manager = QueueManager(address=('', port), authkey=authkey)
     manager.start()
     # print(f'Server started at ip {IP} and port {port}')
     return manager
@@ -181,13 +181,12 @@ def runserver(fn, data, line_counts):
     for file_name, phredscore in mean_quals.items():
         if len(args.fastq_files) > 1:
             if args.csvfile is None:
-                print(file_name.split('/')[-1])
+                print(file_name)
                 csvfile = None
             else:
-                file_name = file_name.split('/')[-1]
                 csvfile = f'{file_name}.{args.csvfile}'
         else:
-            csvfile = args.csvfile.split('/')[-1]
+            csvfile = args.csvfile
         generate_output(phredscore, csvfile)
 
 def make_client_manager(ip, port, authkey):
