@@ -120,7 +120,7 @@ def generate_output(average_phredscores, csvfile):
             for i, score in enumerate(average_phredscores):
                 csv_writer.writerow([i, score])
 
-def make_server_manager(port, authkey):
+def make_server_manager(ip, port, authkey):
     """ Create a manager for the server, listening on the given port.
         Return a manager object with get_job_q and get_result_q methods.
     """
@@ -135,7 +135,7 @@ def make_server_manager(port, authkey):
         pass
     QueueManager.register('get_job_q', callable=lambda: job_q)
     QueueManager.register('get_result_q', callable=lambda: result_q)
-    manager = QueueManager(address=('', port), authkey=authkey)
+    manager = QueueManager(address=(ip, port), authkey=authkey)
     manager.start()
     # print(f'Server started at ip {IP} and port {port}')
     return manager
@@ -143,7 +143,7 @@ def make_server_manager(port, authkey):
 def runserver(fn, data, line_counts):
     """Runs the server"""
     # Start a shared manager server and access its queues
-    manager = make_server_manager(PORTNUM, b'whathasitgotinitspocketsesss?')
+    manager = make_server_manager(IP, PORTNUM, b'whathasitgotinitspocketsesss?')
     shared_job_q = manager.get_job_q()
     shared_result_q = manager.get_result_q()
 
@@ -181,12 +181,13 @@ def runserver(fn, data, line_counts):
     for file_name, phredscore in mean_quals.items():
         if len(args.fastq_files) > 1:
             if args.csvfile is None:
-                print(file_name)
+                print(file_name.split('/')[-1])
                 csvfile = None
             else:
+                file_name = file_name.split('/')[-1]
                 csvfile = f'{file_name}.{args.csvfile}'
         else:
-            csvfile = args.csvfile
+            csvfile = args.csvfile.split('/')[-1]
         generate_output(phredscore, csvfile)
 
 def make_client_manager(ip, port, authkey):
@@ -276,6 +277,8 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     if args.s is True:
+        if args.host is not None:
+            IP = args.host
         if args.port is not None:
             PORTNUM = args.port
 
