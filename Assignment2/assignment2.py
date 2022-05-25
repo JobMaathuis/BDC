@@ -276,8 +276,6 @@ if __name__ == '__main__':
     args = argparser.parse_args()
 
     if args.s is True:
-        if args.host is not None:
-            IP = args.host
         if args.port is not None:
             PORTNUM = args.port
 
