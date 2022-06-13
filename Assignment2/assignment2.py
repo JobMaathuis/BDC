@@ -135,7 +135,7 @@ def make_server_manager(ip, port, authkey):
         pass
     QueueManager.register('get_job_q', callable=lambda: job_q)
     QueueManager.register('get_result_q', callable=lambda: result_q)
-    manager = QueueManager(address=('', port), authkey=authkey)
+    manager = QueueManager(address=(ip, port), authkey=authkey)
     manager.start()
     # print(f'Server started at ip {IP} and port {port}')
     return manager
@@ -181,9 +181,10 @@ def runserver(fn, data, line_counts):
     for file_name, phredscore in mean_quals.items():
         if len(args.fastq_files) > 1:
             if args.csvfile is None:
-                print(file_name)
+                print(file_name.split('/')[-1])
                 csvfile = None
             else:
+                file_name = file_name.split('/')[-1]
                 csvfile = f'{file_name}.{args.csvfile}'
         else:
             csvfile = args.csvfile
@@ -258,7 +259,7 @@ if __name__ == '__main__':
                     help="Run the program in Client mode; see extra options needed below")
 
     server_args = argparser.add_argument_group(title="Arguments when run in server mode")
-    server_args.add_argument("-chunks", action="store", type=int,
+    server_args.add_argument("--chunks", action="store", type=int,
                         help="amount of chunks to be used")
     server_args.add_argument("-o", action="store", dest="csvfile", required=False,
                         help="CSV file to save the output. Default is output to terminal STDOUT")
