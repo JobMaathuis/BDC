@@ -14,23 +14,33 @@ def get_result(file):
         df = spark.read.csv(file, sep=r'\t', header=False, inferSchema=True)
 
         #Q1
-        a1 = df.select('_c11').distinct()
+        a1 = df.select('_c11')\
+                .distinct()
         results.append([1, a1.count(), a1._jdf.queryExecution().simpleString()])
 
         #Q2
-        a2 = df.groupby('_c0').count().agg({'count' : 'mean'})
+        a2 = df.groupby('_c0')\
+                .count()\
+                .agg({'count' : 'mean'})
         results.append([2, a2.first()[0], a2._jdf.queryExecution().simpleString()])
 
         #Q3
-        a3 = df.where(df._c13 != '-').groupBy("_c13").count().sort("count", ascending=False)
+        a3 = df.where(df._c13 != '-')\
+                .groupBy("_c13")\
+                .count()\
+                .sort("count", ascending=False)
         results.append([3, a3.first()[0], a3._jdf.queryExecution().simpleString()])
 
         #Q4
-        a4 = df.groupby('_c11').agg({'_c2' : 'mean'})
+        a4 = df.groupby('_c11')\
+                .agg({'_c2' : 'mean'})
         results.append([4, a4.first()[1], a4._jdf.queryExecution().simpleString()])
 
         #Q5
-        a5 = df.where(df._c11 != '-').groupby('_c11').count().sort('count', ascending=False)
+        a5 = df.where(df._c11 != '-')\
+                .groupby('_c11')\
+                .count()\
+                .sort('count', ascending=False)
         results.append([5, [i[0] for i in a5.take(10)], a5._jdf.queryExecution().simpleString()])
 
         #Q6
@@ -69,8 +79,9 @@ def get_result(file):
         results.append([9, [i[0] for i in a9.take(10)],  a9._jdf.queryExecution().simpleString()])
 
         #Q10
-        a10 = df.select('_c0', '_c2')\
-                .withColumn('counts', f.count('_c0').over(Window.partitionBy('_c2')))\
+        a10 = df.where(df._c11 != '-')\
+                .select('_c0', '_c2', '_c11')\
+                .withColumn('counts', f.count('_c11').over(Window.partitionBy('_c0')))\
                 .dropDuplicates(['_c0'])
         results.append([10, a10.stat.corr('_c2', 'counts'), a10._jdf.queryExecution().simpleString()])
 
