@@ -1,0 +1,2 @@
+Report for Assignment 3 start evaluation at vr 24 jun 2022 12:04:28 CEST with options: None
+***ASSIGNMENT {assignment} STATUS: PASSED at  vr 24 jun 2022 12:04:28 CEST
