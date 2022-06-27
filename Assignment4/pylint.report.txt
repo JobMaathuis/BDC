@@ -1,0 +1,13 @@
+************* Module assignment4
+assignment4.py:7:0: C0303: Trailing whitespace (trailing-whitespace)
+assignment4.py:13:27: C0303: Trailing whitespace (trailing-whitespace)
+assignment4.py:45:0: C0303: Trailing whitespace (trailing-whitespace)
+assignment4.py:55:97: C0303: Trailing whitespace (trailing-whitespace)
+assignment4.py:60:0: C0301: Line too long (151/100) (line-too-long)
+assignment4.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+assignment4.py:8:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+assignment4.py:28:12: R1723: Unnecessary "else" after "break" (no-else-break)
+
+------------------------------------------------------------------
+Your code has been rated at 8.10/10 (previous run: 9.30/10, -1.21)
+
